@@ -24,22 +24,22 @@
 # basis, and the Zsh Development Group have no obligation to provide
 # maintenance, support, updates, enhancements, or modifications.
 
-# clint prompt theme
+# myclint prompt theme
 
-prompt_clint_help () {
+prompt_myclint_help () {
   cat <<'EOF'
 
-  prompt clint [<color1> [<color2> [<color3> [<color4> [<color5>]]]]]
+  prompt myclint [<color1> [<color2> [<color3> [<color4> [<color5>]]]]]
 
   defaults are red, cyan, green, yellow, and white, respectively.
 
 EOF
 }
 
-prompt_clint_setup () {
+prompt_myclint_setup () {
   local -a pcc
   local -A pc
-  local p_date p_tty p_plat p_ver p_userpwd p_apm p_shlvlhist p_rc p_end p_win
+  local p_date p_tty p_plat p_ver p_userpwd p_apm p_shlvlhist p_rc p_end p_win p_wsl
 
   autoload -Uz vcs_info
 
@@ -56,32 +56,31 @@ prompt_clint_setup () {
   pc['\(']="%F{$pcc[1]}("
   pc['\)']="%F{$pcc[1]})"
 
-  p_date="$pc['\[']%F{$pcc[2]}%D{%a %y/%m/%d %R %Z}$pc['\]']"
+  p_date="$pc['\[']%F{$pcc[2]}%D{%y/%m/%d %R %Z}$pc['\]']"
   p_tty="$pc['\[']%F{$pcc[3]}%l$pc['\]']"
-  p_plat="$pc['\[']%F{$pcc[2]}${MACHTYPE}/${OSTYPE}/$(uname -r)$pc['\]']"
-  p_ver="$pc['\[']%F{$pcc[2]}${ZSH_VERSION}$pc['\]']"
-
+    
   [[ -n "$WINDOW" ]] && p_win="$pc['\(']%F{$pcc[4]}$WINDOW$pc['\)']"
+
+  [[ -n "$WSL_DISTRO_NAME" ]] && p_wsl="$pc['\[']%F{$pcc[3]}$WSL_DISTRO_NAME$pc['\]']"
 
   p_userpwd="$pc['<']%F{$pcc[3]}%n@%m$p_win%F{$pcc[5]}:%F{$pcc[4]}%~$pc['>']"
   local p_vcs="%(2v.%U%2v%u.)"
 
   p_shlvlhist="%fzsh%(2L./$SHLVL.) %B%h%b "
-  p_rc="%(?..[%?%1v] )"
+  p_rc="%(?..[%?%1v])"
   p_end="%f%B%#%b "
 
   typeset -ga zle_highlight
   zle_highlight[(r)default:*]=default:$pcc[2]
 
-  prompt="$p_date$p_tty$p_plat$p_ver
-$p_userpwd
-$p_shlvlhist$p_rc$p_vcs$p_end"
+  prompt="$p_date$p_tty$p_wsl$p_shlvlhist$p_vcs
+$p_rc$p_userpwd$p_end"
   PS2='%(4_.\.)%3_> %E'
 
-  add-zsh-hook precmd prompt_clint_precmd
+  add-zsh-hook precmd prompt_myclint_precmd
 }
 
-prompt_clint_precmd () {
+prompt_myclint_precmd () {
   setopt noxtrace noksharrays localoptions
   local exitstatus=$?
   local git_dir git_ref
@@ -96,4 +95,4 @@ prompt_clint_precmd () {
   [[ -n $vcs_info_msg_0_ ]] && psvar[2]="$vcs_info_msg_0_"
 }
 
-prompt_clint_setup "$@"
+prompt_myclint_setup "$@"
