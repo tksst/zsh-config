@@ -1,0 +1,37 @@
+name: Build and Release
+
+on:
+  push:
+
+jobs:
+  build-release:
+    name: Build and Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Docker buildx
+        uses: docker/setup-buildx-action@f211e3e9ded2d9377c8cadc4489a4e38014bc4c9
+
+      - name: Build
+        uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
+        with:
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          outputs: type=local,dest=./work
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535
+        with:
+          name: deb-packages
+          path: ./work/results/
+
+      - name: Release
+        uses: softprops/action-gh-release@1e07f4398721186383de40550babbdf2b84acfc5
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          files: ./work/results/*
