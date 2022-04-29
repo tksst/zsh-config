@@ -1,0 +1,42 @@
+source /etc/zsh/newuser.zshrc.recommended
+
+HISTSIZE=20000
+SAVEHIST=20000
+
+setopt hist_ignore_all_dups
+setopt share_history
+setopt append_history
+
+# cdしたディレクトリを記憶
+setopt auto_pushd
+setopt pushd_ignore_dups
+
+# コマンドミスで修正候補を提示
+setopt correct
+
+alias ls='ls --color=auto'
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+alias diff='diff --color=auto'
+
+fpath+=/opt/tksst/zsh/
+promptinit
+prompt tksst
+
+source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+if [ -d ~/.profile.d/ ]; then
+  for file in ~/.profile.d/*.sh; do
+    if [[ -r $file ]]; then
+      . "$file"
+    fi
+  done
+  unset file
+fi

@@ -1,0 +1,6 @@
+Package: tksst-zsh-config
+Version: 1.0.0-1
+Architecture: all
+Maintainer: Takashi Sato <takashi@tks.st>
+Depends: zsh, zsh-autosuggestions, zsh-syntax-highlighting
+Description: my zsh config

@@ -1,6 +1,0 @@
-Package: tksst-zsh-theme
-Version: 1.0.0-1
-Architecture: all
-Maintainer: Takashi Sato <takashi@tks.st>
-Depends: zsh
-Description: my zsh prompt theme
