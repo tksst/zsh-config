@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.2.1
-FROM debian:bullseye-20220418-slim
+FROM public.ecr.aws/debian/debian:bullseye-20221024-slim
 
 RUN mkdir -p /work/opt/tksst/zsh/ /work/DEBIAN /results
 
