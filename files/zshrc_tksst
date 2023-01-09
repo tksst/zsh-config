@@ -1,11 +1,13 @@
 source /etc/zsh/newuser.zshrc.recommended
 
-HISTSIZE=20000
-SAVEHIST=20000
+HISTSIZE=100000
+SAVEHIST=100000
 
 setopt hist_ignore_all_dups
 setopt share_history
 setopt append_history
+setopt EXTENDED_HISTORY
+setopt HIST_IGNORE_SPACE
 
 # cdしたディレクトリを記憶
 setopt auto_pushd
