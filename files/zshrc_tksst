@@ -29,6 +29,10 @@ alias diff='diff --color=auto'
 # only when invoked with the explicit "less" command
 alias less='less -MR'
 
+# for gpg
+GPG_TTY=$( tty )
+export GPG_TTY
+
 fpath+=/opt/tksst/zsh/
 promptinit
 prompt tksst
