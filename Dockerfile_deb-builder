@@ -1,9 +1,29 @@
-# syntax=docker/dockerfile:1.2.1
+# syntax=docker/dockerfile:1.4.1
 FROM debian:bullseye-slim@sha256:e8ad0bc7d0ee6afd46e904780942033ab83b42b446b58efa88d31ecf3adf4678
+
+# enable snapshot
+RUN cd /etc/apt && \
+  perl -pe 's/^(?=deb)/# /g' < sources.list | perl -pe 's|^#(?= deb http://snapshot.debian.org/)||g' > sources.list-new && \
+  mv sources.list-new sources.list
+
+RUN apt-get -o Acquire::Check-Valid-Until=false update && \
+  apt-get install -y --no-install-recommends git
 
 RUN mkdir -p /work/opt/tksst/zsh/ /work/DEBIAN /results
 
 COPY --chmod=644 files/ /work/opt/tksst/zsh
 COPY control /work/DEBIAN/
+COPY .git/ /git
+
+# set timestamps to the date of the last commit
+RUN <<'_EOFEOF_' bash
+  set -eu
+  set -o posix
+  set -o pipefail
+
+  timestamp=$( cd /git && git log -1 --format=%ci )
+  find /work -print0 | xargs -0 touch --no-dereference --date="$timestamp"
+
+_EOFEOF_
 
 RUN dpkg-deb --build /work /results/
