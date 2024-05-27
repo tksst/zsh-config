@@ -1,0 +1,11 @@
+Source: tksst-zsh-config
+Section: shells
+Priority: optional
+Maintainer: Takashi Sato <takashi@tks.st>
+Build-Depends: debhelper (>=13.3)
+Standards-Version: 4.0.0
+
+Package: tksst-zsh-config
+Architecture: all
+Depends: ${misc:Depends}, zsh, zsh-autosuggestions, zsh-syntax-highlighting
+Description: my zsh config
