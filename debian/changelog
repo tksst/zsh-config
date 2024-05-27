@@ -1,0 +1,31 @@
+tksst-zsh-config (1.3.0) unstable; urgency=low
+
+  * Make the build reproducible
+
+ -- Takashi Sato <takashi@tks.st>  12 May 2024 18:00:00 +0000
+
+tksst-zsh-config (1.2.0-1) unstable; urgency=low
+
+  * Export GPG_TTY for GnuPG
+  * Improvements about history
+
+ -- Takashi Sato <takashi@tks.st>  12 May 2024 18:00:00 +0000
+
+tksst-zsh-config (1.1.1-1) unstable; urgency=low
+
+  * No functional changes
+
+ -- Takashi Sato <takashi@tks.st>  30 Oct 2022 18:23:00 +0900
+
+tksst-zsh-config (1.1.0-1) unstable; urgency=low
+
+  * Enable lesspipe
+  * Apply the options for "less"
+
+ -- Takashi Sato <takashi@tks.st>  30 Oct 2022 17:38:00 +0900
+
+tksst-zsh-config (1.0.0-1) unstable; urgency=low
+
+  * Initial release
+
+ -- Takashi Sato <takashi@tks.st>  29 Apr 2022 10:54:00 +0900

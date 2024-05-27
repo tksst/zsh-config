@@ -1,0 +1,9 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+
+Files: *
+Copyright: 2022-2024 Takashi Sato <takashi@tks.st>
+License: MPL-2.0
+
+License: MPL-2.0
+ On Debian systems, the full text of the Mozilla Public License v2.0
+ can be found in the file `/usr/share/common-licenses/MPL-2.0`.

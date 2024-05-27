@@ -9,10 +9,12 @@ RUN cd /etc/apt && \
 RUN apt-get -o Acquire::Check-Valid-Until=false update && \
   apt-get install -y --no-install-recommends git
 
-RUN mkdir -p /work/opt/tksst/zsh/ /work/DEBIAN /results
+RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends --download-only -y build-essential devscripts debhelper
+RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y build-essential devscripts debhelper
 
-COPY --chmod=644 files/ /work/opt/tksst/zsh
-COPY debian/control /work/DEBIAN/
+COPY --chmod=644 files/ /work/resources/files/
+COPY debian/ /work/resources/debian/
+
 COPY .git/ /git
 
 # set timestamps to the date of the last commit
@@ -26,4 +28,6 @@ RUN <<'_EOFEOF_' bash
 
 _EOFEOF_
 
-RUN dpkg-deb --build /work /results/
+RUN cd /work/resources && debuild -us -uc
+
+RUN mkdir /results && cp /work/tksst-zsh-config_* /results/
