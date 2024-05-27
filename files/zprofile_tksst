@@ -1,0 +1,9 @@
+# read /etc/profile.d/*.sh
+
+if [[ -d /etc/profile.d ]]; then
+  for i in /etc/profile.d/*.sh; do
+    if [[ -r $i ]]; then
+      emulate -R sh -c 'source "$i"'
+    fi
+  done
+fi
