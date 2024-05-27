@@ -12,7 +12,7 @@ RUN apt-get -o Acquire::Check-Valid-Until=false update && \
 RUN mkdir -p /work/opt/tksst/zsh/ /work/DEBIAN /results
 
 COPY --chmod=644 files/ /work/opt/tksst/zsh
-COPY control /work/DEBIAN/
+COPY debian/control /work/DEBIAN/
 COPY .git/ /git
 
 # set timestamps to the date of the last commit
