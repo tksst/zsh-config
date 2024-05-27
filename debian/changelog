@@ -1,6 +1,7 @@
-tksst-zsh-config (1.3.0) unstable; urgency=low
+tksst-zsh-config (2.0.0) unstable; urgency=low
 
   * Make the build reproducible
+  * BREAKING CHANGE: change the install path to /usr/share/tksst-zsh-config
 
  -- Takashi Sato <takashi@tks.st>  12 May 2024 18:00:00 +0000
 
