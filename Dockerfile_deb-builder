@@ -6,27 +6,13 @@ RUN cd /etc/apt && \
   perl -pe 's/^(?=deb)/# /g' < sources.list | perl -pe 's|^#(?= deb http://snapshot.debian.org/)||g' > sources.list-new && \
   mv sources.list-new sources.list
 
-RUN apt-get -o Acquire::Check-Valid-Until=false update && \
-  apt-get install -y --no-install-recommends git
+RUN apt-get -o Acquire::Check-Valid-Until=false update
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends --download-only -y build-essential devscripts debhelper
 RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y build-essential devscripts debhelper
 
 COPY --chmod=644 files/ /work/resources/files/
 COPY debian/ /work/resources/debian/
-
-COPY .git/ /git
-
-# set timestamps to the date of the last commit
-RUN <<'_EOFEOF_' bash
-  set -eu
-  set -o posix
-  set -o pipefail
-
-  timestamp=$( cd /git && git log -1 --format=%ci )
-  find /work -print0 | xargs -0 touch --no-dereference --date="$timestamp"
-
-_EOFEOF_
 
 RUN cd /work/resources && debuild -us -uc
 
