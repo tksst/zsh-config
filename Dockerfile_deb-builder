@@ -18,9 +18,15 @@ RUN apt-get -o Acquire::Check-Valid-Until=false update
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends --download-only -y build-essential devscripts debhelper
 RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y build-essential devscripts debhelper
+RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends --download-only -y nodejs npm
+RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y nodejs npm
 
 COPY --chmod=644 files/ /work/resources/files/
 COPY debian/ /work/resources/debian/
+COPY create-changelog/ /create-changelog/
+COPY changelog.yaml /
+
+RUN cd /create-changelog && npm install && node create-changelog.js < /changelog.yaml > /work/resources/debian/changelog
 
 RUN cd /work/resources && debuild -us -uc
 

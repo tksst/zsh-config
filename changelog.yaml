@@ -1,33 +1,53 @@
-tksst-zsh-config (2.0.0) unstable; urgency=low
+- version: 2.0.0
+  name: tksst-zsh-config
+  distribution: unstable
+  urgency: low
+  body:
+    - Make the build reproducible
+    - "BREAKING CHANGE: change the install path to /usr/share/tksst-zsh-config"
+    - Add a new script for .zprofile that reads /etc/profile.d/*.sh
+  author: Takashi Sato <takashi@tks.st>
+  date: 2000-01-01T00:00:00+0000
+  output-tz: Asia/Tokyo
 
-  * Make the build reproducible
-  * BREAKING CHANGE: change the install path to /usr/share/tksst-zsh-config
-  * Add a new script for .zprofile that reads /etc/profile.d/*.sh
+- version: 1.2.0-1
+  name: tksst-zsh-config
+  distribution: unstable
+  urgency: low
+  body:
+    - Export GPG_TTY for GnuPG
+    - Improvements about history
+  author: Takashi Sato <takashi@tks.st>
+  date: 2023-01-09T12:16:08+0900
+  output-tz: Asia/Tokyo
 
- -- Takashi Sato <takashi@tks.st>  12 May 2024 18:00:00 +0000
+- version: 1.1.1-1
+  name: tksst-zsh-config
+  distribution: unstable
+  urgency: low
+  body:
+    - No functional changes
+  author: Takashi Sato <takashi@tks.st>
+  date: 2022-10-30T18:22:40+0900
+  output-tz: Asia/Tokyo
 
-tksst-zsh-config (1.2.0-1) unstable; urgency=low
+- version: 1.1.0-1
+  name: tksst-zsh-config
+  distribution: unstable
+  urgency: low
+  body:
+    - Enable lesspipe
+    - Apply the options for "less"
+  author: Takashi Sato <takashi@tks.st>
+  date: 2022-10-30T17:37:47+0900
+  output-tz: Asia/Tokyo
 
-  * Export GPG_TTY for GnuPG
-  * Improvements about history
-
- -- Takashi Sato <takashi@tks.st>  09 Jan 2023 12:15:00 +0900
-
-tksst-zsh-config (1.1.1-1) unstable; urgency=low
-
-  * No functional changes
-
- -- Takashi Sato <takashi@tks.st>  30 Oct 2022 18:23:00 +0900
-
-tksst-zsh-config (1.1.0-1) unstable; urgency=low
-
-  * Enable lesspipe
-  * Apply the options for "less"
-
- -- Takashi Sato <takashi@tks.st>  30 Oct 2022 17:38:00 +0900
-
-tksst-zsh-config (1.0.0-1) unstable; urgency=low
-
-  * Initial release
-
- -- Takashi Sato <takashi@tks.st>  29 Apr 2022 10:54:00 +0900
+- version: 1.0.0-1
+  name: tksst-zsh-config
+  distribution: unstable
+  urgency: low
+  body:
+    - Initial release
+  author: Takashi Sato <takashi@tks.st>
+  date: 2022-04-29T10:53:21+0900
+  output-tz: Asia/Tokyo
