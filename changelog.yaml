@@ -1,0 +1,53 @@
+- version: 2.0.0
+  name: tksst-zsh-config
+  distribution: unstable
+  urgency: low
+  body:
+    - Make the build reproducible
+    - "BREAKING CHANGE: change the install path to /usr/share/tksst-zsh-config"
+    - Add a new script for .zprofile that reads /etc/profile.d/*.sh
+  author: Takashi Sato <takashi@tks.st>
+  date: 2000-01-01T00:00:00+0000
+  output-tz: Asia/Tokyo
+
+- version: 1.2.0-1
+  name: tksst-zsh-config
+  distribution: unstable
+  urgency: low
+  body:
+    - Export GPG_TTY for GnuPG
+    - Improvements about history
+  author: Takashi Sato <takashi@tks.st>
+  date: 2023-01-09T12:16:08+0900
+  output-tz: Asia/Tokyo
+
+- version: 1.1.1-1
+  name: tksst-zsh-config
+  distribution: unstable
+  urgency: low
+  body:
+    - No functional changes
+  author: Takashi Sato <takashi@tks.st>
+  date: 2022-10-30T18:22:40+0900
+  output-tz: Asia/Tokyo
+
+- version: 1.1.0-1
+  name: tksst-zsh-config
+  distribution: unstable
+  urgency: low
+  body:
+    - Enable lesspipe
+    - Apply the options for "less"
+  author: Takashi Sato <takashi@tks.st>
+  date: 2022-10-30T17:37:47+0900
+  output-tz: Asia/Tokyo
+
+- version: 1.0.0-1
+  name: tksst-zsh-config
+  distribution: unstable
+  urgency: low
+  body:
+    - Initial release
+  author: Takashi Sato <takashi@tks.st>
+  date: 2022-04-29T10:53:21+0900
+  output-tz: Asia/Tokyo
