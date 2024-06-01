@@ -3,6 +3,9 @@ name: Build and Release
 on:
   push:
 
+env:
+  TAG: tmp:latest
+
 jobs:
   build-release:
     name: Build and Release
@@ -26,7 +29,11 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           file: Dockerfile_deb-builder
-          outputs: type=local,dest=./work
+          load: true
+          tags: ${{ env.TAG }}
+
+      - name: 
+        run: docker run -v "${PWD}/work/:/mnt" ${{ env.TAG }} sh -c 'cp -a /results/ /mnt/'
 
       - name: Upload artifact
         uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
