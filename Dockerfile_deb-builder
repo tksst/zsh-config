@@ -24,4 +24,4 @@ COPY debian/ /work/resources/debian/
 
 RUN cd /work/resources && debuild -us -uc
 
-RUN mkdir /results && cp /work/tksst-zsh-config_* /results/
+RUN mkdir /results && mv /work/tksst-zsh-config_* /results/
