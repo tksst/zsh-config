@@ -1,10 +1,18 @@
 # syntax=docker/dockerfile:1.4.1
-FROM debian:bullseye-slim@sha256:0e75382930ceb533e2f438071307708e79dc86d9b8e433cc6dd1a96872f2651d
+FROM debian:bookworm-slim@sha256:804194b909ef23fb995d9412c9378fb3505fe2427b70f3cc425339e48a828fca
 
 # enable snapshot
-RUN cd /etc/apt && \
-  perl -pe 's/^(?=deb)/# /g' < sources.list | perl -pe 's|^#(?= deb http://snapshot.debian.org/)||g' > sources.list-new && \
-  mv sources.list-new sources.list
+RUN <<'_EOFEOF_' bash
+
+set -eu
+set -o posix
+set -o pipefail
+
+cd /etc/apt/sources.list.d/
+perl -pe 's|^URIs: http://.+\n||g' < debian.sources | perl -pe 's|^#(?= http://snapshot.debian.org/)|URIs:|g' > debian.sources-new
+mv debian.sources-new debian.sources
+
+_EOFEOF_
 
 RUN apt-get -o Acquire::Check-Valid-Until=false update
 
