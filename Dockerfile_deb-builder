@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.4.1
-FROM debian:bookworm-slim@sha256:804194b909ef23fb995d9412c9378fb3505fe2427b70f3cc425339e48a828fca
+FROM debian:bookworm-slim@sha256:f528891ab1aa484bf7233dbcc84f3c806c3e427571d75510a9d74bb5ec535b33
 
 # enable snapshot
 RUN <<'_EOFEOF_' bash
