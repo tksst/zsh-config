@@ -1,25 +1,18 @@
 # syntax=docker/dockerfile:1.4.1
-FROM debian:bookworm-slim@sha256:804194b909ef23fb995d9412c9378fb3505fe2427b70f3cc425339e48a828fca
+FROM ubuntu:noble@sha256:2e863c44b718727c860746568e1d54afd13b2fa71b160f5cd9058fc436217b30
 
-# enable snapshot
-RUN <<'_EOFEOF_' bash
+ARG SNAPSHOT_DATETIME=20240714T000000Z
 
-set -eu
-set -o posix
-set -o pipefail
+# install OpenSSL-related packages because apt's snapshot uses HTTPS.
+RUN apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends libssl3t64=3.0.13-0ubuntu3.1 openssl=3.0.13-0ubuntu3.1 ca-certificates=20240203
 
-cd /etc/apt/sources.list.d/
-perl -pe 's|^URIs: http://.+\n||g' < debian.sources | perl -pe 's|^#(?= http://snapshot.debian.org/)|URIs:|g' > debian.sources-new
-mv debian.sources-new debian.sources
+RUN apt-get -o Acquire::Check-Valid-Until=false update --snapshot "${SNAPSHOT_DATETIME}"
 
-_EOFEOF_
-
-RUN apt-get -o Acquire::Check-Valid-Until=false update
-
-RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends --download-only -y build-essential devscripts debhelper
-RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y build-essential devscripts debhelper
-RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends --download-only -y nodejs npm
-RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y nodejs npm
+RUN DEBIAN_FRONTEND=noninteractive apt-get install --snapshot "${SNAPSHOT_DATETIME}" --no-install-recommends --download-only -y build-essential devscripts debhelper
+RUN DEBIAN_FRONTEND=noninteractive apt-get install --snapshot "${SNAPSHOT_DATETIME}" --no-install-recommends -y build-essential devscripts debhelper
+RUN DEBIAN_FRONTEND=noninteractive apt-get install --snapshot "${SNAPSHOT_DATETIME}" --no-install-recommends --download-only -y nodejs npm
+RUN DEBIAN_FRONTEND=noninteractive apt-get install --snapshot "${SNAPSHOT_DATETIME}" --no-install-recommends -y nodejs npm
 
 COPY --chmod=644 files/ /work/resources/files/
 COPY debian/ /work/resources/debian/
