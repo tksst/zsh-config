@@ -1,0 +1,98 @@
+name: Build and Release
+
+on:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash --noprofile --norc -eu -o pipefail -o posix {0}
+
+jobs:
+  prepare:
+    name: Prepare
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+
+    outputs:
+      commit-sha: ${{ steps.metadata.outputs.commit-sha }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@44c2b7a8a4ea60a981eaca3cf939b5f4305c123b # v4.1.5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
+        with:
+          node-version-file: ./release-scripts/.nvmrc
+
+      - name: Set the time in the changelog to the current time
+        run: |
+          cd release-scripts
+          npm ci
+          node update-the-date.js < ../changelog.yaml > ../changelog.yaml.new
+          mv ../changelog.yaml.new ../changelog.yaml
+
+      - name: Commit the changelog
+        run: |
+          git config --global user.email action@github.com
+          git config --global user.name actions-user
+          git add -A
+          git commit -m "[skip ci] set the current time in the changelog"
+          git push
+
+      - name: output the current commit SHA
+        id: metadata
+        run: echo "commit-sha=$(git rev-parse HEAD)" | tee -a "$GITHUB_OUTPUT"
+
+  build:
+    uses: ./.github/workflows/build.yaml
+    with:
+      ref: ${{ needs.prepare.outputs.commit-sha }}
+    needs: prepare
+    permissions:
+      contents: write
+
+  release:
+    name: Release
+    runs-on: ubuntu-24.04
+    needs:
+      - prepare
+      - build
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@44c2b7a8a4ea60a981eaca3cf939b5f4305c123b # v4.1.5
+        with:
+          ref: ${{ needs.prepare.outputs.commit-sha }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
+        with:
+          node-version-file: ./release-scripts/.nvmrc
+
+      - name: Install dependencies
+        run: cd release-scripts && npm ci
+
+      - name: extract the new version from the changelog
+        id: metadata
+        run: echo "version=$( node ./release-scripts/newest-version.js < changelog.yaml )" | tee -a "$GITHUB_OUTPUT"
+
+      - name: Generate a release note body
+        run: node ./release-scripts/create-release-body.js < changelog.yaml | tee release-note-body.md
+
+      - name: Download artifact
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4.1.8
+        with:
+          name: deb-packages
+          path: ./artifacts/
+
+      - name: Release
+        uses: softprops/action-gh-release@69320dbe05506a9a39fc8ae11030b214ec2d1f87 # v2.0.5
+        with:
+          files: ./artifacts/*
+          body_path: release-note-body.md
+          target_commitish: ${{ needs.prepare.outputs.commit-sha }}
+          tag_name: v${{ steps.metadata.outputs.version }}
