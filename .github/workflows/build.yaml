@@ -1,6 +1,7 @@
 name: Build
 on:
   push:
+  pull_request:
   workflow_call:
     inputs:
       ref:
@@ -16,15 +17,37 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
 
     steps:
+      - name: Setup Docker buildx
+        uses: docker/setup-buildx-action@4fd812986e6c8c2a69e18311145f9371337f27d4 # v3.4.0
+
+      - name: Checkout repository (Base Branch)
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        with:
+          ref: ${{ github.base_ref }}
+
+      - name: Build the container (Base Branch)
+        if: github.event_name == 'pull_request'
+        uses: docker/build-push-action@1a162644f9a7e87d8f4b053101d1d9a712edc18c # v6.3.0
+        with:
+          context: .
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          file: Dockerfile_deb-builder
+          load: true
+          tags: ${{ env.TAG }}
+
+      - name: Print artifacts' checksums (Base Branch)
+        if: github.event_name == 'pull_request'
+        run: docker run ${{ env.TAG }} sh -c 'sha256sum /results/*' | tee /tmp/base.txt
+
       - name: Checkout repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
           ref: ${{ inputs.ref }}
-
-      - name: Setup Docker buildx
-        uses: docker/setup-buildx-action@4fd812986e6c8c2a69e18311145f9371337f27d4 # v3.4.0
 
       - name: Build the container
         uses: docker/build-push-action@1a162644f9a7e87d8f4b053101d1d9a712edc18c # v6.3.0
@@ -35,6 +58,9 @@ jobs:
           file: Dockerfile_deb-builder
           load: true
           tags: ${{ env.TAG }}
+
+      - name: Print artifacts' checksums
+        run: docker run ${{ env.TAG }} sh -c 'sha256sum /results/*' | tee /tmp/ref.txt
 
       - name: Extracting artifacts from containers
         run: docker run -v "${PWD}/work/:/mnt" ${{ env.TAG }} sh -c 'cp -a /results/ /mnt/'
@@ -47,3 +73,26 @@ jobs:
             ./work/results/*.deb
             ./work/results/*.dsc
             ./work/results/*.tar.*
+
+      - name: Comment to the PR
+        if: github.event_name == 'pull_request'
+        env:
+          pr_number: ${{ github.event.pull_request.number }}
+          GH_TOKEN: ${{ github.token }}
+        shell: bash --noprofile --norc -eu -o pipefail -o posix {0}
+        run: |
+          mv /tmp/ref.txt /tmp/merged.txt
+
+          ( ( cd /tmp && diff --unified=99999 base.txt merged.txt ) || true ) > /tmp/diff.txt
+
+          if [[ -s /tmp/diff.txt ]]; then
+            echo "The artifacts have changed between merging this PR:"
+            echo '```diff'
+            cat /tmp/diff.txt
+            echo '```'
+          else
+            echo "The artifacts remains unchanged between merging this PR:"
+            echo '```'
+            cat /tmp/merged.txt
+            echo '```'
+          fi | gh pr comment "$pr_number" -F -
