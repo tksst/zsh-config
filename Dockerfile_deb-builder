@@ -32,4 +32,4 @@ RUN find /work/resources -print0 | xargs -0 touch -d "$( node /scripts-for-build
 
 RUN cd /work/resources && debuild -us -uc
 
-RUN mkdir /results && mv /work/tksst-zsh-config_* /results/
+RUN mkdir /artifacts && cd /work && mv *.deb *.dsc *.tar.* /artifacts/
