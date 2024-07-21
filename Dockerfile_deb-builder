@@ -14,12 +14,21 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install --snapshot "${SNAPSHOT_DATETI
 RUN DEBIAN_FRONTEND=noninteractive apt-get install --snapshot "${SNAPSHOT_DATETIME}" --no-install-recommends --download-only -y nodejs npm
 RUN DEBIAN_FRONTEND=noninteractive apt-get install --snapshot "${SNAPSHOT_DATETIME}" --no-install-recommends -y nodejs npm
 
-COPY --chmod=644 files/ /work/resources/files/
-COPY debian/ /work/resources/debian/
-COPY create-changelog/ /create-changelog/
+COPY scripts-for-build/ /scripts-for-build/
+RUN cd /scripts-for-build && npm install
+
 COPY changelog.yaml /
 
-RUN cd /create-changelog && npm install && node create-changelog.js < /changelog.yaml > /work/resources/debian/changelog
+COPY files/ /work/resources/files/
+COPY debian/ /work/resources/debian/
+
+RUN node /scripts-for-build/create-changelog.js < /changelog.yaml > /work/resources/debian/changelog
+
+# set modes and timestamps for reproducibility
+RUN find /work/resources/ -type d -print0 | xargs -0 chmod 755
+RUN find /work/resources/ -type f -print0 | xargs -0 chmod 644
+RUN chmod +x /work/resources/debian/rules
+RUN find /work/resources -print0 | xargs -0 touch -d "$( node /scripts-for-build/source-date.js < /changelog.yaml )"
 
 RUN cd /work/resources && debuild -us -uc
 
