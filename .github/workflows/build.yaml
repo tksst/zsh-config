@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - name: Setup Docker buildx
-        uses: docker/setup-buildx-action@4fd812986e6c8c2a69e18311145f9371337f27d4 # v3.4.0
+        uses: docker/setup-buildx-action@988b5a0280414f521da01fcc63a27aeeb4b104db # v3.6.1
 
       - name: Checkout repository (Base Branch)
         if: github.event_name == 'pull_request'
@@ -31,7 +31,7 @@ jobs:
 
       - name: Build the container (Base Branch)
         if: github.event_name == 'pull_request'
-        uses: docker/build-push-action@1a162644f9a7e87d8f4b053101d1d9a712edc18c # v6.3.0
+        uses: docker/build-push-action@16ebe778df0e7752d2cfcbd924afdbbd89c1a755 # v6.6.1
         with:
           context: .
           cache-from: type=gha
@@ -50,7 +50,7 @@ jobs:
           ref: ${{ inputs.ref }}
 
       - name: Build the container
-        uses: docker/build-push-action@1a162644f9a7e87d8f4b053101d1d9a712edc18c # v6.3.0
+        uses: docker/build-push-action@16ebe778df0e7752d2cfcbd924afdbbd89c1a755 # v6.6.1
         with:
           context: .
           cache-from: type=gha
@@ -66,7 +66,7 @@ jobs:
         run: docker run -v "${PWD}/work/:/mnt" ${{ env.TAG }} sh -c 'cp -a /artifacts/ /mnt/'
 
       - name: Upload artifact
-        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
+        uses: actions/upload-artifact@834a144ee995460fba8ed112a2fc961b36a5ec5a # v4.3.6
         with:
           name: deb-packages
           path: ./work/artifacts/
