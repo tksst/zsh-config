@@ -5,7 +5,7 @@ ARG SNAPSHOT_DATETIME=20240714T000000Z
 
 # install OpenSSL-related packages because apt's snapshot uses HTTPS.
 RUN apt-get update
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends libssl3t64=3.0.13-0ubuntu3.1 openssl=3.0.13-0ubuntu3.1 ca-certificates=20240203
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --allow-downgrades --no-install-recommends openssl=3.0.13-0ubuntu3 ca-certificates=20240203
 
 RUN apt-get -o Acquire::Check-Valid-Until=false update --snapshot "${SNAPSHOT_DATETIME}"
 
