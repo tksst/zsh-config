@@ -1,18 +1,31 @@
 # syntax=docker/dockerfile:1.4.1
 FROM ubuntu:noble@sha256:2e863c44b718727c860746568e1d54afd13b2fa71b160f5cd9058fc436217b30
 
-ARG SNAPSHOT_DATETIME=20240714T000000Z
-
 # install OpenSSL-related packages because apt's snapshot uses HTTPS.
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --allow-downgrades --no-install-recommends openssl=3.0.13-0ubuntu3 ca-certificates=20240203
 
-RUN apt-get -o Acquire::Check-Valid-Until=false update --snapshot "${SNAPSHOT_DATETIME}"
+RUN <<'_EOFEOF_' bash
+    
+    set -eu
+	set -o pipefail
+    set -o posix
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install --snapshot "${SNAPSHOT_DATETIME}" --no-install-recommends --download-only -y build-essential devscripts debhelper
-RUN DEBIAN_FRONTEND=noninteractive apt-get install --snapshot "${SNAPSHOT_DATETIME}" --no-install-recommends -y build-essential devscripts debhelper
-RUN DEBIAN_FRONTEND=noninteractive apt-get install --snapshot "${SNAPSHOT_DATETIME}" --no-install-recommends --download-only -y nodejs npm
-RUN DEBIAN_FRONTEND=noninteractive apt-get install --snapshot "${SNAPSHOT_DATETIME}" --no-install-recommends -y nodejs npm
+	snapshot_unixepoch=$( stat --format=%Y /usr )
+	snapshot_iso=$( TZ= date --date @$snapshot_unixepoch +"%Y%m%dT%H%M%SZ" )
+
+	cd /etc/apt/sources.list.d/
+	perl -pe "s/(?=Signed-By:)/Snapshot: ${snapshot_iso}\n/g" < ubuntu.sources > ubuntu.sources-new
+    mv ubuntu.sources-new ubuntu.sources
+
+_EOFEOF_
+
+RUN apt-get -o Acquire::Check-Valid-Until=false update
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends --download-only -y build-essential devscripts debhelper
+RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y build-essential devscripts debhelper
+RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends --download-only -y nodejs npm
+RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y nodejs npm
 
 COPY scripts-for-build/ /scripts-for-build/
 RUN cd /scripts-for-build && npm install
