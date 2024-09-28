@@ -11,7 +11,7 @@ RUN <<'_EOFEOF_' bash
 	set -o pipefail
     set -o posix
 
-	snapshot_unixepoch=$( stat --format=%Y /usr )
+	snapshot_unixepoch=$( stat --format=%Y /etc/cloud/build.info )
 	snapshot_iso=$( TZ= date --date @$snapshot_unixepoch +"%Y%m%dT%H%M%SZ" )
 
 	cd /etc/apt/sources.list.d/
