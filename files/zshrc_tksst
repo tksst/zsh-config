@@ -35,7 +35,7 @@ alias less='less -MR'
 GPG_TTY=$( tty )
 export GPG_TTY
 
-fpath+=/opt/tksst/zsh/
+fpath+=/usr/share/tksst-zsh-config/
 promptinit
 prompt tksst
 
