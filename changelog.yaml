@@ -1,9 +1,19 @@
+- version: 2.0.2
+  name: tksst-zsh-config
+  distribution: unstable
+  urgency: low
+  body:
+    - fix the changelog of 2.0.1
+  author: Takashi Sato <takashi@tks.st>
+  date: 2000-01-01T00:00:00.000Z
+  output-tz: Asia/Tokyo
+
 - version: 2.0.1
   name: tksst-zsh-config
   distribution: unstable
   urgency: low
   body:
-    - fix: unable to load the prompt
+    - "fix: unable to load the prompt"
   author: Takashi Sato <takashi@tks.st>
   date: 2024-11-12T10:25:12.329Z
   output-tz: Asia/Tokyo
