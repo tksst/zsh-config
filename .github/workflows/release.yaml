@@ -52,6 +52,7 @@ jobs:
     needs: prepare
     permissions:
       contents: write
+      pull-requests: write
 
   release:
     name: Release
