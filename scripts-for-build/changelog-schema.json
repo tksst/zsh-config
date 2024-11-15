@@ -1,0 +1,49 @@
+{
+	"title": "Schema for changelog.yaml",
+	"type": "array",
+	"items": {
+		"type": "object",
+		"properties": {
+			"version": {
+				"type": "string"
+			},
+			"name": {
+				"type": "string"
+			},
+			"distribution": {
+				"type": "string"
+			},
+			"urgency": {
+				"type": "string",
+				"pattern": "^(low|medium|high|emergency|critical)( .+)?$"
+			},
+			"body": {
+				"type": "array",
+				"items": {
+					"type": "string"
+				},
+				"minItems": 1
+			},
+			"author": {
+				"type": "string"
+			},
+			"date": {
+				"type": "string",
+				"format": "date-time"
+			},
+			"output-tz": {
+				"type": "string"
+			}
+		},
+		"required": [
+			"version",
+			"name",
+			"distribution",
+			"urgency",
+			"body",
+			"author",
+			"date",
+			"output-tz"
+		]
+	}
+}

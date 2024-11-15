@@ -35,7 +35,7 @@ COPY changelog.yaml /
 COPY files/ /work/resources/files/
 COPY debian/ /work/resources/debian/
 
-RUN node /scripts-for-build/create-changelog.js < /changelog.yaml > /work/resources/debian/changelog
+RUN node --no-warnings /scripts-for-build/create-changelog.js < /changelog.yaml > /work/resources/debian/changelog
 
 # set modes and timestamps for reproducibility
 RUN find /work/resources/ -type d -print0 | xargs -0 chmod 755
