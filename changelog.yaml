@@ -6,7 +6,7 @@
   body:
     - fix the changelog of 2.0.1
   author: Takashi Sato <takashi@tks.st>
-  date: "2000-01-01T00:00:00.000Z"
+  date: "2024-11-15T09:55:50.120Z"
   output-tz: Asia/Tokyo
 
 - version: 2.0.1
