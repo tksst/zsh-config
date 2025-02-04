@@ -2,8 +2,8 @@
   "type": "module",
   "dependencies": {
     "ajv": "8.17.1",
-    "semver": "7.6.3",
-    "yaml": "2.6.0"
+    "semver": "7.7.1",
+    "yaml": "2.7.0"
   },
   "devDependencies": {
     "@tksst/prettier-config": "1.1.0",
